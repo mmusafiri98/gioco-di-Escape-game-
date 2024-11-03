@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Bootstrap CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        body {
+            background-color: pink;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 2%;
+            height: 2%;
+            margin: 5px;
+        }
+
+        .maze-container {
+            display: grid;
+            grid-template-columns: repeat(9, 60px);
+            grid-template-rows: repeat(9, 60px);
+            gap: 2px;
+            position: relative;
+            background-color: burlywood;
+        }
+
+        .right-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .wall {
+            background-color: blue;
+            transition: background-color 0.5s ease;
+        }
+
+        .wall.open {
+            background-color: transparent;
+            pointer-events: none;
+        }
+
+        .path {
+            background-color: #fff;
+        }
+
+        .start {
+            background-color: #00ff00;
+        }
+
+        .end {
+            background-color: #ff0000;
+        }
+
+        .Player {
+            position: absolute;
+            width: 90px;
+            height: 100px;
+            background-color: yellow;
+            border-radius: 50%;
+            transition: top 0.3s, left 0.3s;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .button-container button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="maze-container" id="maze"></div>
+        <div class="Player" id="player"></div>
+    </div>
+
+    <div class="right-content">
+        <div class="button-container">
+            <!-- Pulsanti di controllo -->
+            <button onclick="moveLeft()" class="material-icons">arrow_left</button>
+            <button onclick="moveDown()" class="material-icons">arrow_downward</button>
+            <button onclick="moveRight()" class="material-icons">arrow_right</button>
+            <button onclick="moveUp()" class="material-icons">arrow_upward</button>
+        </div>
+    </div>
+
+    <script>
+        const player = document.getElementById('player');
+        const mazeContainer = document.getElementById('maze');
+        const mazeSize = 9;
+        const cellWidth = 70;  // Aggiornato in base alle dimensioni del layout
+        const cellHeight = 60;
+
+        let playerPosition = { row: 0, col: 0 };
+
+        function createMaze() {
+            mazeContainer.innerHTML = '';
+            const maze = [];
+            for (let row = 0; row < mazeSize; row++) {
+                const rowArray = [];
+                for (let col = 0; col < mazeSize; col++) {
+                    const cell = document.createElement('div');
+
+                    if (row === 0 && col === 0) {
+                        cell.classList.add('start');
+                    } else if (row === mazeSize - 1 && col === mazeSize - 1) {
+                        cell.classList.add('end');
+                    } else if (Math.random() < 0.3) {
+                        cell.classList.add('wall');
+                    } else {
+                        cell.classList.add('path');
+                    }
+                    rowArray.push(cell);
+                    mazeContainer.appendChild(cell);
+                }
+                maze.push(rowArray);
+            }
+
+            return maze;
+        }
+
+        let maze = createMaze();
+
+        function updatePlayerPosition() {
+            const topPosition = playerPosition.row * cellHeight;
+            const leftPosition = playerPosition.col * cellWidth;
+            // Correzione della sintassi con template string
+            player.style.top = `${topPosition}px`;
+            player.style.left = `${leftPosition}px`;
+        }
+
+        updatePlayerPosition();
+
+        function moveRight() {
+            if (playerPosition.col < mazeSize - 1) {
+                const nextCell = maze[playerPosition.row][playerPosition.col + 1];
+                if (nextCell.classList.contains('path') || nextCell.classList.contains('open') || nextCell.classList.contains('end')) {
+                    playerPosition.col++;
+                } else {
+                    alert("Stop, there is a wall!");
+                }
+            }
+            checkWinner();
+            updatePlayerPosition();
+        }
+
+        function moveLeft() {
+            if (playerPosition.col > 0) {
+                const nextCell = maze[playerPosition.row][playerPosition.col - 1];
+                if (nextCell.classList.contains('path') || nextCell.classList.contains('open') || nextCell.classList.contains('end')) {
+                    playerPosition.col--;
+                } else {
+                    alert("Stop, there is a wall!");
+                }
+            }
+            checkWinner();
+            updatePlayerPosition();
+        }
+
+        function moveDown() {
+            if (playerPosition.row < mazeSize - 1) {
+                const nextCell = maze[playerPosition.row + 1][playerPosition.col];
+                if (nextCell.classList.contains('path') || nextCell.classList.contains('open') || nextCell.classList.contains('end')) {
+                    playerPosition.row++;
+                } else {
+                    alert("Stop, there is a wall!");
+                }
+            }
+            checkWinner();
+            updatePlayerPosition();
+        }
+
+        function moveUp() {
+            if (playerPosition.row > 0) {
+                const nextCell = maze[playerPosition.row - 1][playerPosition.col];
+                if (nextCell.classList.contains('path') || nextCell.classList.contains('open') || nextCell.classList.contains('end')) {
+                    playerPosition.row--;
+                } else {
+                    alert("Stop, there is a wall!");
+                }
+            }
+            checkWinner();
+            updatePlayerPosition();
+        }
+
+        function checkWinner() {
+            const endRow = mazeSize - 1;
+            const endCol = mazeSize - 1;
+
+            if (playerPosition.row === endRow && playerPosition.col === endCol) {
+                alert("Congratulations, you won the game!");
+            }
+        }
+
+        function animateWalls() {
+            const walls = document.querySelectorAll('.wall');
+            setInterval(() => {
+                walls.forEach(wall => {
+                    wall.classList.toggle('open');
+                });
+            }, 3000);
+        }
+
+        window.onload = animateWalls;
+    </script>
+</body>
+
+</html>
