@@ -18,10 +18,10 @@
         .main-container {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            width: 20%;
+            align-items: flex-end;
+            width: 9%;
             height: 2%;
-            margin: 8px;
+            margin: 60px;
         }
 
         .maze-container {
@@ -29,26 +29,27 @@
             grid-template-columns: repeat(9, 60px);
             grid-template-rows: repeat(9, 60px);
             gap: 2px;
+            width: 6px;
             position: relative;
             background-color: burlywood;
         }
 
         .right-content {
             position: fixed;
-            /* Utilisez 'fixed' pour un positionnement fixe */
             bottom: 10px;
-            /* Positionner à 20px du bas */
+            /* Positionner à 10px du bas */
             left: 229px;
-            top: 600px;
-            /* Positionner à 20px de la gauche */
+            top: 700px;
+            /* Positionner à 229px de la gauche */
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            /* Changez 'column' à 'row' pour un alignement horizontal */
             align-items: center;
-            /* Centrer les boutons */
-            /* Vous pouvez ajouter un padding ou un margin si nécessaire */
+            /* Centrer les boutons verticalement */
             margin-bottom: 90px;
-            /* Ajoutez cela pour un espacement supplémentaire au bas */
+            /* Espacement supplémentaire en bas */
         }
+
 
 
         .wall {
@@ -107,6 +108,7 @@
     <div class="right-content">
         <div class="button-container">
             <!-- Contrôle des boutons -->
+            <button onclick="restart()">Start</button>
             <button onclick="moveLeft()" class="material-icons">arrow_left</button>
             <button onclick="moveDown()" class="material-icons">arrow_downward</button>
             <button onclick="moveRight()" class="material-icons">arrow_right</button>
@@ -117,9 +119,9 @@
     <script>
         const player = document.getElementById('player');
         const mazeContainer = document.getElementById('maze');
-        const mazeSize = 9;
-        const cellWidth = 70;
-        const cellHeight = 60;
+        const mazeSize = 8;
+        const cellWidth = 30;
+        const cellHeight = 50;
 
         let playerPosition = { row: 0, col: 0 };
 
@@ -220,6 +222,7 @@
                 alert("Congratulations, you won the game!");
             }
         }
+
 
         function animateWalls() {
             const walls = document.querySelectorAll('.wall');
