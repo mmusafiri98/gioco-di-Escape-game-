@@ -19,9 +19,9 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            width: 2%;
+            width: 20%;
             height: 2%;
-            margin: 5px;
+            margin: 8px;
         }
 
         .maze-container {
@@ -34,14 +34,22 @@
         }
 
         .right-content {
+            position: fixed;
+            /* Utilisez 'fixed' pour un positionnement fixe */
+            bottom: 10px;
+            /* Positionner à 20px du bas */
+            left: 529px;
+            top: 600px;
+            /* Positionner à 20px de la gauche */
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
             align-items: center;
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            /* Centrer les boutons */
+            /* Vous pouvez ajouter un padding ou un margin si nécessaire */
+            margin-bottom: 90px;
+            /* Ajoutez cela pour un espacement supplémentaire au bas */
         }
+
 
         .wall {
             background-color: blue;
@@ -98,7 +106,7 @@
 
     <div class="right-content">
         <div class="button-container">
-            <!-- Pulsanti di controllo -->
+            <!-- Contrôle des boutons -->
             <button onclick="moveLeft()" class="material-icons">arrow_left</button>
             <button onclick="moveDown()" class="material-icons">arrow_downward</button>
             <button onclick="moveRight()" class="material-icons">arrow_right</button>
@@ -110,7 +118,7 @@
         const player = document.getElementById('player');
         const mazeContainer = document.getElementById('maze');
         const mazeSize = 9;
-        const cellWidth = 70;  // Aggiornato in base alle dimensioni del layout
+        const cellWidth = 70;
         const cellHeight = 60;
 
         let playerPosition = { row: 0, col: 0 };
@@ -146,7 +154,6 @@
         function updatePlayerPosition() {
             const topPosition = playerPosition.row * cellHeight;
             const leftPosition = playerPosition.col * cellWidth;
-            // Correzione della sintassi con template string
             player.style.top = `${topPosition}px`;
             player.style.left = `${leftPosition}px`;
         }
