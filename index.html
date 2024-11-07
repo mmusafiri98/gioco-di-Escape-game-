@@ -16,40 +16,21 @@
 
         .main-container {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            width: 9%;
-            height: 2%;
-            margin: 60px;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
         }
 
         .maze-container {
             display: grid;
-            grid-template-columns: repeat(9, 60px);
-            grid-template-rows: repeat(9, 60px);
+            grid-template-columns: repeat(9, 1fr);
             gap: 2px;
-            width: 6px;
-            position: relative;
+            width: 90vw;
+            /* Adjust width to be responsive */
+            max-width: 450px;
+            /* Set a max width for larger screens */
             background-color: burlywood;
         }
-
-        .right-content {
-            position: fixed;
-            bottom: 10px;
-            /* Positionner à 10px du bas */
-            left: 229px;
-            top: 700px;
-            /* Positionner à 229px de la gauche */
-            display: flex;
-            flex-direction: row;
-            /* Changez 'column' à 'row' pour un alignement horizontal */
-            align-items: center;
-            /* Centrer les boutons verticalement */
-            margin-bottom: 90px;
-            /* Espacement supplémentaire en bas */
-        }
-
-
 
         .wall {
             background-color: blue;
@@ -75,38 +56,39 @@
 
         .Player {
             position: absolute;
-            width: 90px;
-            height: 100px;
+            width: 9vw;
+            height: 9vw;
+            max-width: 45px;
+            max-height: 45px;
             background-color: yellow;
             border-radius: 50%;
             transition: top 0.3s, left 0.3s;
         }
 
-        .button-container {
+        .right-content {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
+            flex-direction: row;
+            align-items: center;
             margin-top: 20px;
-            gap: 10px;
         }
 
         .button-container button {
             padding: 10px;
             font-size: 16px;
             cursor: pointer;
+            margin: 5px;
         }
     </style>
 </head>
 
 <body>
-    <div class="main-container">
+    <div class="container-fluid main-container">
         <div class="maze-container" id="maze"></div>
         <div class="Player" id="player"></div>
     </div>
 
     <div class="right-content">
         <div class="button-container">
-            <!-- Contrôle des boutons -->
             <button onclick="restart()">Start</button>
             <button onclick="moveLeft()" class="material-icons">arrow_left</button>
             <button onclick="moveDown()" class="material-icons">arrow_downward</button>
@@ -119,9 +101,6 @@
         const player = document.getElementById('player');
         const mazeContainer = document.getElementById('maze');
         const mazeSize = 9;
-        const mazeWidth = 5;
-        const cellWidth = 60; // Largeur de chaque cellule
-        const cellHeight = 60; // Hauteur de chaque cellule
 
         let playerPosition = { row: 0, col: 0 };
 
@@ -132,6 +111,9 @@
                 const rowArray = [];
                 for (let col = 0; col < mazeSize; col++) {
                     const cell = document.createElement('div');
+                    cell.style.width = '100%';
+                    cell.style.height = '0';
+                    cell.style.paddingBottom = '100%'; /* Square cells */
 
                     if (row === 0 && col === 0) {
                         cell.classList.add('start');
@@ -154,7 +136,8 @@
         let maze = createMaze();
 
         function updatePlayerPosition() {
-            const topPosition = playerPosition.row * cellHeight;
+            const cellWidth = mazeContainer.children[0].offsetWidth;
+            const topPosition = playerPosition.row * cellWidth;
             const leftPosition = playerPosition.col * cellWidth;
             player.style.top = `${topPosition}px`;
             player.style.left = `${leftPosition}px`;
@@ -215,14 +198,10 @@
         }
 
         function checkWinner() {
-            const endRow = mazeSize - 1;
-            const endCol = mazeSize - 1;
-
-            if (playerPosition.row === endRow && playerPosition.col === endCol) {
+            if (playerPosition.row === mazeSize - 1 && playerPosition.col === mazeSize - 1) {
                 alert("Congratulations, you won the game!");
             }
         }
-
 
         function animateWalls() {
             const walls = document.querySelectorAll('.wall');
@@ -238,3 +217,4 @@
 </body>
 
 </html>
+
